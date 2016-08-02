@@ -1,5 +1,8 @@
 macro "Drosophila Larva Brain Segmentation" {
 
+	// Default size for the rolling ball
+	rbs = 40;
+
 	// opens directory to choose a stack or image
 	open();
 
@@ -17,19 +20,21 @@ macro "Drosophila Larva Brain Segmentation" {
 	// create a dialod for the user to select the channel for segmentation
 	Dialog.create("Plant Stem Analysis");
 	Dialog.addChoice("Input image:", images, images[0]);
+	Dialog.addNumber("Background Subtraction (Rolling Ball Size):", rbs);
 	Dialog.show();
 	selection = Dialog.getChoice();
+	rbs = Dialog.getNumber();
 
 	// apply the user selection and duplicate the image for mask creation
 	selectImage(selection);
 	run("Duplicate...", "duplicate title=mask");
 
 	// background subtraction
-	run("Subtract Background...", "rolling=40 stack"); 
+	run("Subtract Background...", "rolling=" + rbs + " stack"); 
 	// smoothening
 	run("Smooth", "stack"); 
 	// autothreshold segmentation
-	run("Auto Threshold", "method=Default stack"); 
+	run("Auto Threshold", "method=Default stack white"); 
 	// makes a binary stack or image
 	run("Make Binary", "stack");  
 	// watershed object separation
@@ -39,3 +44,10 @@ macro "Drosophila Larva Brain Segmentation" {
 	run("Blob Ratiometrics (2D)");
 	
 }
+
+/* 
+Notes:
+A window opens and the user should choose the GFP channel in the first line, and the RFP channel in the second line. 
+For the mask use the result picture from the macro (it has the same name as the RFP channel stack but it appears always first on the list). 
+We usually don't use background substraction and use a particle minimum size of 3.
+*/
