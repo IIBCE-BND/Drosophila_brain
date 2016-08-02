@@ -1,1 +1,12 @@
-Drosophila_brain
+# Larva Brain Segmentation and Ratiometric Measurement
+The ratiometric analysis involves two major steps. First, region of interests are segmented by using intensity threshold segmentation. Secondly, the pixel intensities are measured in the region of interest for the sensor signal (ODDD-GFP) and the baseline signal (nuclear mRFP). The ratio of the average pixel intensities between the sensor signal and the baseline signal is calculated for each region of interest
+
+## Segmentation Macro
+The macro carries out two steps on the stack to improve the segmentation, Subtract Background and Smooth. To adjust background subtraction the rolling ball parameter can be changed in the macro. For brain nuclei segmentation we used rolling ball=40.The macro subsequently performs auto-thresholding, transformation into binary images and uses watershed transformation to separate clumped objects. The method for auto-thresholding can be adapted based on the users samples. For brain nuclei segmentation we used the Default method.At the end of the macro the Blob Ratiometrics plugin is called to do the object quantification. (Also see [BlobRatiometric] [br])
+### InstallationInstall the macro under Plugin > Macros > install. 
+(Alternativly simply open in with ImageJ in the script editor, where you can run it with the corresponding button)
+## Walkthrough
+* Under Plugin > Macros you see now the Macro name at the bottom of the list.  Open the Macro and click Run* Use the "Open File" dialog to open the image file that you would like to analyse (the macro assumes to find all channels in one file). The image is then opened in a hyperstack and split into the single channel stacks. 
+* In the subsequent macro dialog select the stack that is used for segmentation and adjust the rolling ball size for background subtraction according to the objects of interest (roughly two times the average object diameter) and then click “OK”. 
+* In the final dialog of the ratiometric plugin the channels to compute the intensity ratio and the object mask (segmentation image) have to be selected. Futhermore the dialog allows to configure if background subtraction is used and to put so basic constraints on the objects of interest (object filtering according to object are).
+[br]:https://github.com/eggerbo/ImageJ_BlobRatiometric
