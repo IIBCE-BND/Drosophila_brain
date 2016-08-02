@@ -1,5 +1,8 @@
 macro "Drosophila Larva Brain Segmentation" {
 
+	// Available autothreshold methods
+	methods = newArray("Default", "Huang", "Intermodes", "IsoData", "Li", "MaxEntropy", "Mean", "MinError(I)", "Minimum","Moments","Otsu","Percentile","RenyiEntropy","Shanbhag","Triangle","Yen");
+
 	// Default size for the rolling ball
 	rbs = 40;
 
@@ -21,9 +24,11 @@ macro "Drosophila Larva Brain Segmentation" {
 	Dialog.create("Plant Stem Analysis");
 	Dialog.addChoice("Input image:", images, images[0]);
 	Dialog.addNumber("Background Subtraction (Rolling Ball Size):", rbs);
+	Dialog.addChoice("Auto Threshold Method", methods, methods[0]);
 	Dialog.show();
 	selection = Dialog.getChoice();
 	rbs = Dialog.getNumber();
+	method = Dialog.getChoice();
 
 	// apply the user selection and duplicate the image for mask creation
 	selectImage(selection);
@@ -34,7 +39,7 @@ macro "Drosophila Larva Brain Segmentation" {
 	// smoothening
 	run("Smooth", "stack"); 
 	// autothreshold segmentation
-	run("Auto Threshold", "method=Default stack white"); 
+	run("Auto Threshold", "method=" + method + " stack white"); 
 	// makes a binary stack or image
 	run("Make Binary", "stack");  
 	// watershed object separation
