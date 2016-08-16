@@ -21,7 +21,7 @@ macro "Drosophila Larva Brain Segmentation" {
 	}
 
 	// create a dialod for the user to select the channel for segmentation
-	Dialog.create("Plant Stem Analysis");
+	Dialog.create("Segmentation Analysis");
 	Dialog.addChoice("Input image:", images, images[0]);
 	Dialog.addNumber("Background Subtraction (Rolling Ball Size):", rbs);
 	Dialog.addChoice("Auto Threshold Method", methods, methods[0]);
